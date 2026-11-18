@@ -66,6 +66,10 @@ Run the pipeline and the read-only web API:
 ./project-bottle.py      # serves http://127.0.0.1:8080/listsensors
 ```
 
+Endpoints: `/listsensors` returns a JSON array of staging rows, `/health`
+reports database connectivity, and static pages are at
+`http://127.0.0.1:8080/static/index.html` and `.../static/testtable.html`.
+
 Each successful run **replaces** the contents of `breathe_staging`, so reruns
 do not create duplicate rows. If the API returns no valid records, the table is
 left untouched.
