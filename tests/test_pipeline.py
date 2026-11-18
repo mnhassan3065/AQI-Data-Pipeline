@@ -56,7 +56,7 @@ def test_fetch_sensors_validates_response(monkeypatch):
     monkeypatch.setattr(breathe.requests, "Session", lambda: session)
     cfg = MagicMock(breathe_api_key="key", breathe_url_root="https://x/")
 
-    with pytest.raises(ValueError, match="JSON list"):
+    with pytest.raises(TypeError, match="JSON list"):
         breathe.fetch_sensors(cfg)
     session.get.assert_called_once_with("https://x/ListSensors", timeout=(5, 30))
 

@@ -5,7 +5,7 @@ import argparse
 import logging
 import logging.handlers
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import requests
 import sqlalchemy as db
@@ -71,7 +71,7 @@ def fetch_sensors(cfg) -> list:
         data = response.json()
 
     if not isinstance(data, list):
-        raise ValueError("Expected a JSON list from ListSensors")
+        raise TypeError("Expected a JSON list from ListSensors")
     return data
 
 
@@ -85,7 +85,7 @@ def parse_timestamp(value, site_code: str, field: str):
             text = text[:-1] + "+00:00"
         parsed = datetime.fromisoformat(text)
         if parsed.tzinfo is not None:
-            parsed = parsed.astimezone(timezone.utc).replace(tzinfo=None)
+            parsed = parsed.astimezone(UTC).replace(tzinfo=None)
         return parsed
     except (ValueError, TypeError):
         logger.warning("Unparseable %s for %s: %r", field, site_code, value)

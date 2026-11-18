@@ -88,3 +88,9 @@ python3 -m pytest -q
 ```
 
 The tests use SQLite and mocks — no live API key or MySQL server needed.
+
+## CI
+
+`.github/workflows/ci.yml` runs on pushes and pull requests to `main`: syntax
+check, `ruff`, `pytest`, `pip-audit`, and a check that no key or `.env` file is
+tracked. It needs no secrets.
