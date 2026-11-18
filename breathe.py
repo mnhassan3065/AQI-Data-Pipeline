@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """Fetch Breathe sensor metadata and load it into the local MySQL staging table."""
 
 import argparse

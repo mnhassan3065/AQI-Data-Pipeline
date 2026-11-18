@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """Read-only web API for the local AQI staging table."""
 
 import logging
