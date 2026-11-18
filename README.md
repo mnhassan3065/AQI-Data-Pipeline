@@ -61,9 +61,14 @@ sudo -E ./projectinitdb.sh
 Run the pipeline and the read-only web API:
 
 ```sh
-./breathe.py          # or: ./breathe.sh
-./project-bottle.py   # serves http://127.0.0.1:8080/listsensors
+./breathe.py --dry-run   # fetch/validate only, no database writes
+./breathe.py             # or: ./breathe.sh
+./project-bottle.py      # serves http://127.0.0.1:8080/listsensors
 ```
+
+Each successful run **replaces** the contents of `breathe_staging`, so reruns
+do not create duplicate rows. If the API returns no valid records, the table is
+left untouched.
 
 The shell wrappers (`breathe.sh`, `project-bottle.sh`) still support `-i` to
 create the venv and install dependencies, and `-h` for usage.
