@@ -1,0 +1,24 @@
+# Local secrets and config
+.env
+.env.*
+!.env.example
+project.ini
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+.pytest_cache/
+
+# Runtime data / logs / scratch
+data/
+scratch/
+*.db
+*.log
+listsensors.raw.json*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

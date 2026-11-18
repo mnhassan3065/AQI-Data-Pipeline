@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+
+<head>
+<title>Test Table</title>
+<link rel="stylesheet" type="text/css" href="css/test.css">
+<link rel="stylesheet" type="text/css" href="css/datatable.css">
+<script src="js/jquery-4.0.0.min.js"></script>
+
+<script language="javascript">
+
+url = "/listsensors" ; 
+
+$.getJSON(url, function(data) {
+    var tb = document.createElement("table");
+    tb.className = "datatable" ; 
+    var tb_head = document.createElement("thead");
+    var tb_body = document.createElement("tbody");
+    var odd_even = false;
+    var gen_header = true ; 
+
+//    alert(data);
+
+    $.each(data, function() {
+        $.each(this, function(k,v) {
+            var tb_row = tb_body.insertRow();
+            tb_row.className = odd_even ? "odd" : "even" ; 
+
+            if (gen_header) {
+                var tb_rowh = tb_head.insertRow();
+            }
+
+            $.each(this, function(x,y) {
+                var cell = tb_row.insertCell();
+                cell.appendChild(document.createTextNode(y)); 
+                if (gen_header) {
+                    var cellh = document.createElement("th");
+                    cellh.innerHTML = x.toString();
+                    tb_rowh.appendChild(cellh);
+                }
+            });
+            odd_even = !odd_even;    
+            gen_header = false;
+        });
+    });
+
+    tb.appendChild(tb_head);
+    tb.appendChild(tb_body);
+    
+    $("#testtable").append(tb);
+});
+
+</script>
+
+</head>
+<body>
+<p>Test Table</p>
+<div id="testtable"></div>
+</body>
+
+</html>

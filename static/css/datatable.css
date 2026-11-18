@@ -1,0 +1,36 @@
+table, th, td {
+    border: 1px solid #CCCCFF ;  
+}
+
+td {
+    white-space: nowrap;
+    overflow-x: hidden;
+    max-width: 250px ; 
+}
+
+th {
+    background-color: #AAAAAA ; 
+    color: #000000; 
+}
+
+.datatable {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-sie: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.odd {
+    background-color: #FFCC66;
+    color: #000000;
+    text-align: left;
+}
+
+.even {
+    background-color: #FFCCFF;
+    color: #000000;
+    text-align: left;
+}
+

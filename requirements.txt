@@ -1,0 +1,5 @@
+Flask>=3.0,<4
+SQLAlchemy>=2.0,<3
+mysql-connector-python>=9.0,<10
+requests>=2.31,<3
+python-dotenv>=1.0,<2
