@@ -25,26 +25,6 @@ echo "INFO: Using script: ${INITDBSCRIPT}"
 
 # Render the template with properly escaped SQL literals / identifiers so the
 # password never appears in the shell command line or in the repository.
-python3 - "$INITDBSCRIPT" <<'PY' | mysql -u root -p
-import os
-import sys
-from pathlib import Path
-
-
-def sql_string(value: str) -> str:
-    return "'" + value.replace("\\", "\\\\").replace("'", "''") + "'"
-
-
-def sql_identifier(value: str) -> str:
-    return "`" + value.replace("`", "``") + "`"
-
-
-template = Path(sys.argv[1]).read_text()
-print(template % {
-    "user": sql_string(os.environ["MYSQL_USER"]),
-    "password": sql_string(os.environ["MYSQL_PASSWORD"]),
-    "database": sql_identifier(os.environ["MYSQL_DATABASE"]),
-})
-PY
+python3 render_sql.py "$INITDBSCRIPT" | mysql -u root -p
 
 echo "INFO: Done."

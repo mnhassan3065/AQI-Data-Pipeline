@@ -79,3 +79,12 @@ create the venv and install dependencies, and `-h` for usage.
 
 `curltest.sh` is a quick API smoke test; it writes to `listsensors.raw.json`
 (gitignored).
+
+## Tests
+
+```sh
+python3 -m pip install -r requirements-dev.txt
+python3 -m pytest -q
+```
+
+The tests use SQLite and mocks — no live API key or MySQL server needed.
