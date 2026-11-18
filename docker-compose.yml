@@ -1,0 +1,40 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-localroot}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-airquality}
+      MYSQL_USER: ${MYSQL_USER:-project}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      retries: 20
+
+  api:
+    build: .
+    env_file: .env
+    environment:
+      MYSQL_HOST: mysql
+      FLASK_HOST: 0.0.0.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  pipeline:
+    build: .
+    profiles: [pipeline]
+    env_file: .env
+    environment:
+      MYSQL_HOST: mysql
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: ["python", "breathe.py"]
+
+volumes:
+  mysql-data:

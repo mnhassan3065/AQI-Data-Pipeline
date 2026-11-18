@@ -27,6 +27,7 @@ $EDITOR .env
 | `MYSQL_DATABASE` | Database name (default `airquality`) |
 | `MYSQL_USER` | Database user |
 | `MYSQL_PASSWORD` | Database password (**secret**) |
+| `MYSQL_ROOT_PASSWORD` | Docker Compose only: MySQL root password |
 | `FLASK_HOST`, `FLASK_DEBUG` | Web server binding / debug toggle |
 
 You need a valid Breathe API key from your API provider to test the core
@@ -45,11 +46,21 @@ Notes:
 
 Requires Python 3, `pip`, and a running MySQL server.
 
+Quickest path — creates the venv, installs pinned dependencies and creates
+`.env` from the template if it doesn't exist:
+
+```sh
+./setup.sh
+$EDITOR .env
+```
+
+Or do it manually:
+
 ```sh
 python3 -m venv venv
 . venv/bin/activate
 python3 -m pip install --upgrade pip
-python3 -m pip install -r requirements.txt
+python3 -m pip install -r requirements-dev.txt
 ```
 
 Initialise the database (needs MySQL root, reads credentials from `.env`):
@@ -94,3 +105,40 @@ The tests use SQLite and mocks — no live API key or MySQL server needed.
 `.github/workflows/ci.yml` runs on pushes and pull requests to `main`: syntax
 check, `ruff`, `pytest`, `pip-audit`, and a check that no key or `.env` file is
 tracked. It needs no secrets.
+
+## Docker Compose (optional)
+
+Runs MySQL 8 and the API in containers; no local MySQL install or `sudo`
+needed. Copy and edit `.env` first.
+
+```sh
+docker compose up --build          # API on http://127.0.0.1:8080
+docker compose --profile pipeline run --rm pipeline   # load sensor data
+docker compose down                # stop; add -v to delete the DB volume
+```
+
+The MySQL container creates the user/database itself using `MYSQL_USER`,
+`MYSQL_PASSWORD` and `MYSQL_DATABASE` from `.env`. The app containers get
+`MYSQL_HOST=mysql` injected; secrets are never baked into the image.
+
+## How it fits together
+
+1. `breathe.py` calls `ListSensors`, validates/parses the response, and
+   **replaces** the `breathe_staging` table in one transaction.
+2. `project-bottle.py` exposes that table read-only at `/listsensors` and
+   serves the static pages.
+3. `config.py` is the single source of settings; `render_sql.py` produces the
+   escaped SQL used by `projectinitdb.sh`.
+
+`sensordata-mapping.ods` is the reference spreadsheet describing the sensor
+fields and how they map to the staging columns in `breathe.py` (`COLUMNS`).
+
+## Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| `ModuleNotFoundError: dotenv` | Activate the venv: `. venv/bin/activate` |
+| `Missing required setting BREATHE_API_KEY` | Fill in `.env` |
+| `Access denied for user 'project'` | Re-run `sudo -E ./projectinitdb.sh`; it now syncs the password |
+| HTTP 403 from the API | Check the Breathe key and its restrictions |
+| Connection refused | Start MySQL: `sudo systemctl start mysql` |
