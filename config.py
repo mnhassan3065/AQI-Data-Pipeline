@@ -1,11 +1,8 @@
 """Shared configuration for the AQI data pipeline.
 
-All credentials are read from environment variables. For local development
+All settings are read from environment variables. For local development
 they can be placed in a ``.env`` file next to this module (see
 ``.env.example``); that file is gitignored and must never be committed.
-
-In CI / deployment, set the same variables using GitHub Secrets (or an
-Environment's secrets) rather than a .env file.
 """
 
 from __future__ import annotations
@@ -30,8 +27,7 @@ def _required(name: str) -> str:
     if not value:
         raise RuntimeError(
             f"Missing required setting {name!r}. "
-            "Copy .env.example to .env and fill it in, or set it as a "
-            "GitHub Secret in CI."
+            "Copy .env.example to .env and fill it in."
         )
     return value
 
