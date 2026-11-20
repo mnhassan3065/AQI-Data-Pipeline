@@ -16,7 +16,7 @@ usage() {
   exit 0
 }
 
-while getopts hi flag
+while getopts h flag
 do
   case "${flag}" in
      h)
@@ -34,6 +34,6 @@ setupVenv
 
 echo "INFO: Launching ${PYTHONSCRIPT}..."
 
-python3 ./${PYTHONSCRIPT}
+python3 ${PYTHONSCRIPT}
 
 
